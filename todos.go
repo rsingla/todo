@@ -3,20 +3,20 @@ package main
 import "github.com/gofiber/fiber/v2"
 
 func updateTodos(c *fiber.Ctx) error {
-	id, err := c.ParamsInt("id")
+	id, _ := c.ParamsInt("id")
 
 	todo := Todo{}
 
-	err = c.BodyParser(&todo)
-
-	if err != nil {
-		return c.Status(401).SendString("Invalid id")
-	}
+	c.BodyParser(&todo)
 
 	for i, t := range todos {
 		if t.ID == id {
-			todos[i].Title = todo.Title
-			todos[i].Body = todo.Body
+			if todo.Title != "" {
+				todos[i].Title = todo.Title
+			}
+			if todo.Body != "" {
+				todos[i].Body = todo.Body
+			}
 			todos[i].Done = true
 			break
 		}
